@@ -4,18 +4,29 @@
 char executable_code[128]; 
 typedef void(function_call)();
 
+/* demo uses a simple return statement  (0xC3).
+To proved the code is actually running
+you can use a 0xCC which is a breakpoint
+the code wiil abort with Trace/breakpoint trap
+*/
+
 int main(int argc, char *argv[]) { 
-  printf("Exec in static memory\n"); 
+  printf("Exec code in static memory\n"); 
   executable_code [0] = 0xC3; // flat mode near return 
   function_call *f = (function_call *)&executable_code[0];
-  (*f) ();
-  printf("Done Exec in static memory\n"); 
-
-  printf("Exec in malloc memory\n");     
+  (*f) (); 
+ 
+  printf("Exec code in malloc memory\n"); 
   char * allocated = (char*) malloc (128);
   allocated [0] = 0xC3; // flat mode near return 
   f = (function_call *)&allocated[0];
-  (*f) ();  
-  printf("Done Exec in malloc memory\n");  
+  (*f) ();   
+
+  printf("Exec code in stack memory\n"); 
+  char * stack[128];
+  stack [0] = 0xC3; // flat mode near return 
+  function_call *f = (function_call *)&stack[0];
+  (*f) (); 
+
   return 0; 
 }
