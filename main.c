@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   (*f_malloc) ();   
 
   printf("Exec code in stack memory\n"); 
-  char * stack[128];
+  char stack[128];
   stack [0] = 0xC3; // flat mode near return 
   function_call *f_stack = (function_call *)&stack[0];
   (*f_stack) (); 
