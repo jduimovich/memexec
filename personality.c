@@ -3,23 +3,23 @@
 
 char executable_code[128]; 
 typedef void(function_call)();
-
-void print_personality () { 
+ 
+void change_personality () {  
   long pers = personality(0xffffffffUL);
   if (pers < 0L) { 
-      perror("Error getting personality: ");
+      perror("Error getting personality:");
   }
-  printf("Personality == %lx\n", pers); 
-}
-void change_personality () { 
-  print_personality ();
-  long pers = personality(0xffffffffUL);
+  printf("Initial Personality == %lx\n", pers); 
   long new_pers = personality(pers | ADDR_NO_RANDOMIZE | READ_IMPLIES_EXEC);
   if (new_pers < 0L) { 
       perror("Error adding ADDR_NO_RANDOMIZE and READ_IMPLIES_EXEC");
   }
   printf("Ret value for ADDR_NO_RANDOMIZE and READ_IMPLIES_EXEC  == %lx\n", new_pers); 
-  print_personality ();
+  pers = personality(0xffffffffUL);
+  if (pers < 0L) { 
+      perror("Error getting personality:");
+  } 
+  printf("New Personality == %lx\n", pers); 
 }
 
 int main(int argc, char *argv[]) { 
