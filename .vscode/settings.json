@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.sjs": "javascript",
+        "stdlib.h": "c",
+        "stdio.h": "c"
+    }
+}
