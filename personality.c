@@ -11,6 +11,12 @@ void change_personality () {
       perror("Error getting personality:");
   }
   printf("Initial Personality == %lx\n", pers); 
+  if (pers & ADDR_NO_RANDOMIZE) { 
+    printf("ADDR_NO_RANDOMIZE is already set\n");  
+  }
+  if (pers & READ_IMPLIES_EXEC) { 
+    printf("READ_IMPLIES_EXEC is already set\n");  
+  }
   long new_pers = personality(pers | ADDR_NO_RANDOMIZE | READ_IMPLIES_EXEC);
   if (new_pers < 0L) { 
       perror("Error adding ADDR_NO_RANDOMIZE and READ_IMPLIES_EXEC");
@@ -21,6 +27,13 @@ void change_personality () {
       perror("Error getting personality:");
   } 
   printf("New Personality == %lx\n", pers); 
+    if (pers & ADDR_NO_RANDOMIZE) { 
+    printf("ADDR_NO_RANDOMIZE is  set\n");  
+  }
+  if (pers & READ_IMPLIES_EXEC) { 
+    printf("READ_IMPLIES_EXEC is  set\n");  
+  }
+
 }
 
 int main(int argc, char *argv[]) { 
