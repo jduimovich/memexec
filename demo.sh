@@ -16,8 +16,7 @@ else
   echo "FAIL to run executable code despite -z execstack" 
 fi
 
-echo -n 
-
+echo ' ' 
 echo Running demo_w_exec - compiled without -z execstack 
 #Expect this to CRASH 
 ./demo_no_exec
@@ -29,7 +28,7 @@ else
   echo "SUCCESS - Without -z execstack this should crash"  
 fi
 
-
+echo ' ' 
 echo Running demo_personality_w_exec - compiled with -z execstack 
 ./demo_personality_w_exec
 ERR=$?
@@ -40,6 +39,7 @@ else
   echo "FAILED - with -z execstack should succeed"  
 fi
 
+echo ' ' 
 echo Running demo_personality_w_exec - compiled with -z execstack 
 ./demo_personality_no_exec
 ERR=$?
