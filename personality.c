@@ -1,5 +1,5 @@
-#include "stdio.h"
-#incude "personality.h"
+#include <stdio.h>
+#include <sys/personality.h> 
 
 char executable_code[128]; 
 typedef void(function_call)();
@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
   long new_pers = personality(pers | ADDR_NO_RANDOMIZE | READ_IMPLIES_EXEC);
   
 
-  long pers = personality(0xffffffffUL);
+  pers = personality(0xffffffffUL);
   printf("Personality now == %lx\n", pers);    
 
   executable_code [0] = 0xC3; // flat mode near return 
