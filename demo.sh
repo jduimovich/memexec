@@ -17,7 +17,7 @@ else
 fi
 
 echo ' ' 
-echo Running demo_w_exec - compiled without -z execstack 
+echo Running demo_no_exec - compiled without -z execstack 
 #Expect this to CRASH 
 ./demo_no_exec
 ERR=$?
@@ -40,7 +40,7 @@ else
 fi
 
 echo ' ' 
-echo Running demo_personality_w_exec - compiled with -z execstack 
+echo Running demo_personality_no_exec - compiled with -z execstack 
 ./demo_personality_no_exec
 ERR=$?
 if [ $ERR -eq 0 ]
