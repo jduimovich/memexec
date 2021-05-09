@@ -13,8 +13,9 @@ void print_personality () {
 }
 void change_personality () { 
   print_personality ();
+  long pers = personality(0xffffffffUL);
   long new_pers = personality(pers | ADDR_NO_RANDOMIZE | READ_IMPLIES_EXEC);
-  if (pers < 0L) { 
+  if (new_pers < 0L) { 
       perror("Error adding ADDR_NO_RANDOMIZE and READ_IMPLIES_EXEC");
   }
   printf("Ret value for ADDR_NO_RANDOMIZE and READ_IMPLIES_EXEC  == %lx\n", new_pers); 
