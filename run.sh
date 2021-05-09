@@ -1,9 +1,12 @@
 
 cc -z execstack main.c -o  demo_w_exec
 cc main.c -o  demo_no_exec
-
 cc personality.c -z execstack -o  demo_personality_w_exec
 cc personality.c -o  demo_personality_no_exec
+
+echo binary execstack flags are 
+execstack -q demo_*
+
 
 echo Running demo_w_exec - compiled with -z execstack 
 #Expect this to SUCCEED 
