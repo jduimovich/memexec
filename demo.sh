@@ -8,9 +8,9 @@ echo Expect this to SUCCEED
 ERR=$?
 if [ $ERR -eq 0 ]
 then
-  echo "Correct - Successfully ran executable code"
+  echo "SUCCESS - Successfully ran executable code"
 else
-  echo "Fail to run executable code" 
+  echo "FAIL to run executable code despite -z execstack" 
 fi
 
 echo -n 
@@ -21,7 +21,7 @@ echo Expect this to CRASH
 ERR=$?
 if [ $ERR -eq 0 ]
 then
-  echo "Correct - No Exec Stack should crash"
+  echo "FAIL - Without -z execstack this should crash" 
 else
-  echo "FAIL - No Exec Stack should not succeed" 
+  echo "SUCCESS - Without -z execstack this should crash"  
 fi
