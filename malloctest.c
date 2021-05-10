@@ -33,6 +33,10 @@ int main(int argc, char *argv[]) {
       printf("ERROR on PAGE_SIZE assumptions %d\n", pagesize); 
       exit (-1);
   }
+  if (sizeof (void*) != 8) {  
+      printf("ERROR must be 64 bit %d\n", sizeof (void*)); 
+      exit (-1);
+  }
 
   printf("_SC_PAGE_SIZE %d\n", pagesize); 
  
