@@ -26,7 +26,7 @@ you can use a 0xCC which is a breakpoint
 the code wiil abort with Trace/breakpoint trap
 */
 
-#define ALLOCATE_SIZE 64
+#define ALLOCATE_SIZE 4096
 
 int main(int argc, char *argv[]) {  
   int pagesize = sysconf(_SC_PAGE_SIZE);
