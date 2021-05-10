@@ -7,7 +7,7 @@
 
 int make_rwx(char *m, int len) {  
   int result = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
-  printf ("RWX from %p for %d bytes, result = %d\n", result);
+  printf ("RWX from %p for %d bytes, result = %d\n", m, len, result);
   return result;
 }
  
