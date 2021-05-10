@@ -9,7 +9,7 @@ cc -m64 malloctest.c -o  demo_malloc_no_exec
 echo binary execstack flags are 
 execstack -q demo_* 
 
-echo Running demo_w_exec - compiled with -z execstack 
+echo Running demo_w_exec - compiled with -z execstack
 #Expect this to SUCCEED 
 ./demo_w_exec
 ERR=$?
@@ -55,12 +55,12 @@ else
 fi 
 
 echo ' ' 
-echo Running demo_malloc_no_exec - not compiled with execstack
+echo Running demo_malloc_no_exec - no execstack use mprotect to enable execute
 ./demo_malloc_no_exec
 ERR=$?
 if [ $ERR -eq 0 ]
 then 
-  echo "SUCCESS - without -z execstack this should now succeed"  
+  echo "SUCCESS - without -z execstack this should still succeed due to mprotect"  
 else
-  echo "FAILED - without -z execstack this should now succeed but did not"   
+  echo "FAILED - with mprotect this should succeed but failed"   
 fi 

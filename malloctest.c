@@ -33,15 +33,32 @@ int main(int argc, char *argv[]) {
       printf("ERROR must be 64 bit %d\n", sizeof (void*)); 
       exit (-1);
   } 
-  
-  printf("Exec code in malloc memory\n"); 
-  char * raw = (char*) malloc (pagesize*2);
-  char * allocated =  align_to(raw, pagesize); 
-  printf ("Trying Allocated %p\n",allocated);  
-  make_rwx(allocated, pagesize) ;
-  allocated [0] = 0xC3; // flat mode near return 
-  function_call *f_malloc = (function_call *)&allocated[0];
-  (*f_malloc) ();   
+
+  { 
+    printf("Exec code in malloc memory\n"); 
+    /* aligns the memory returned via mprotect skips front of allocated to align  
+    */
+    char * raw = (char*) malloc (pagesize*2);
+    char * allocated =  align_to(raw, pagesize); 
+    printf ("Trying Allocated %p\n",allocated);  
+    make_rwx(allocated, pagesize) ;
+    allocated [0] = 0xC3; // flat mode near return 
+    function_call *f_malloc = (function_call *)&allocated[0];
+    (*f_malloc) ();   
+  }
+
+  {
+    printf("Exec code in memalign memory\n"); 
+    /* memalign and mprotect  
+    */ 
+    char * allocated =  (char*) memalign(pagesize, 16); 
+    printf ("memalign Allocated %p\n",allocated);  
+    make_rwx(allocated, pagesize) ;
+    allocated [0] = 0xC3; // flat mode near return 
+    function_call *f_malloc = (function_call *)&allocated[0];
+    (*f_malloc) ();   
+  }
+
  
 
   return 0; 
