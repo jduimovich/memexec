@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 
 void make_rwx(char *m, int len) {  
-  int r = mprotect((void *)m,   len,    PROT_READ |  PROT_WRITE| PROT_EXEC);
+  int r = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX %d\n", r);
 }
  
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     printf("Exec code in memalign memory\n"); 
     /* memalign and mprotect  
     */ 
-    char * allocated =  (char*) memalign(pagesize, 16); 
+    char * allocated =  (char*) memalign(pagesize, pagesize); 
     printf ("memalign Allocated %p\n",allocated);  
     make_rwx(allocated, pagesize) ;
     allocated [0] = 0xC3; // flat mode near return 
