@@ -12,13 +12,10 @@ void make_rwx(char *m, int len) {
 
 #define PAGE_SIZE 4096 
 char *align_to (char *m, int align) { 
-  printf ("Align %p to %x\n", m, align);
-  char *a = m + (align-1); 
-  long aa = (long)a;
-  aa &= ~(align-1);
-  a=(char*)aa;
-  printf ("Align %p to %p\n", m, a);
-  return a;
+  printf ("Align %p to %x\n", m, align); 
+  long aligned = (long)((m + align-1) & ~(align-1));  
+  printf ("Align %p to %lx\n", m, aligned);
+  return (char *) aligned;
 }
  
 typedef void(function_call)();
@@ -41,10 +38,8 @@ int main(int argc, char *argv[]) {
  
   printf("Exec code in malloc memory\n"); 
   char * raw = (char*) malloc (PAGE_SIZE*2);
-  char * allocated =  align_to(raw, PAGE_SIZE);
-
-  printf ("Trying Allocated %p\n",allocated);
-
+  char * allocated =  align_to(raw, PAGE_SIZE); 
+  printf ("Trying Allocated %p\n",allocated);  
   make_rwx(allocated, PAGE_SIZE) ;
   allocated [0] = 0xC3; // flat mode near return 
   function_call *f_malloc = (function_call *)&allocated[0];
