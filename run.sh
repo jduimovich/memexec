@@ -5,6 +5,7 @@ cc -m64 personality.c -z execstack -o  demo_personality_w_exec
 cc -m64 personality.c -o  demo_personality_no_exec
 
 cc -m64 malloctest.c -o  demo_malloc_no_exec
+cc -m64 mmapalloc.c -o  demo_mmapalloc_no_exec
 
 echo binary execstack flags are 
 execstack -q demo_* 
@@ -64,3 +65,16 @@ then
 else
   echo "FAILED - with mprotect this should succeed but failed"   
 fi 
+
+
+echo ' ' 
+echo Running demo_mmapalloc_no_exec - no execstack use mprotect to enable execute
+./demo_mmapalloc_no_exec
+ERR=$?
+if [ $ERR -eq 0 ]
+then 
+  echo "SUCCESS - mprotect execute of mmapped memory worked"  
+else
+  echo "FAILED - mprotect execute of mmapped memory failed to work"   
+fi 
+

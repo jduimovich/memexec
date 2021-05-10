@@ -5,22 +5,6 @@
 #include <errno.h> 
 #include <sys/mman.h>
 
-
-void *
-anon_alloc(size_t len)
-{
-    int prot = PROT_READ | PROT_WRITE;
-    int flags = MAP_ANONYMOUS | MAP_PRIVATE;
-    void *p = mmap(0, len, prot, flags, -1, 0);
-    return p != MAP_FAILED ? p : 0;
-}
-
-void
-anon_free(void *p, size_t len)
-{
-    munmap(p, len);
-}
-
 int make_rwx(char *m, int len) {  
   int result = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX from %p for %d bytes, result = %d\n", m, len, result);
@@ -107,18 +91,6 @@ int main(int argc, char *argv[]) {
     allocated [0] = 0xC3; // flat mode near return 
     function_call *f_malloc = (function_call *)&allocated[0];
     (*f_malloc) ();   
-  }
-
-   {
-    printf("Exec code in anon_alloc \n"); 
-    /* aligned_alloc and mprotect  */ 
-    char * allocated =  (char*) anon_alloc(ALLOCATE_SIZE); 
-    printf ("anon_alloc Allocated %p\n",allocated);  
-    make_rwx(allocated, ALLOCATE_SIZE) ;
-    allocated [0] = 0xC3; // flat mode near return 
-    function_call *f_malloc = (function_call *)&allocated[0];
-    (*f_malloc) ();   
-  }
-  
+  }  
   return 0; 
 }
