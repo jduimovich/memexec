@@ -9,8 +9,7 @@ void make_rwx(char *m, int len) {
   int r = mprotect((void *)m,   len,    PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX %d\n", r);
 }
-
-#define PAGE_SIZE 4096 
+ 
 char *align_to (char *m, int align) { 
   printf ("Align %p to %x\n", m, align); 
   long aligned = ((long)(m + align-1) & ~(align-1));  
@@ -29,22 +28,17 @@ the code wiil abort with Trace/breakpoint trap
 int main(int argc, char *argv[]) { 
 
   int pagesize = sysconf(_SC_PAGE_SIZE);
-  if (pagesize != PAGE_SIZE) {  
-      printf("ERROR on PAGE_SIZE assumptions %d\n", pagesize); 
-      exit (-1);
-  }
+  printf("_SC_PAGE_SIZE %d\n", pagesize); 
   if (sizeof (void*) != 8) {  
       printf("ERROR must be 64 bit %d\n", sizeof (void*)); 
       exit (-1);
-  }
-
-  printf("_SC_PAGE_SIZE %d\n", pagesize); 
- 
+  } 
+  
   printf("Exec code in malloc memory\n"); 
-  char * raw = (char*) malloc (PAGE_SIZE*2);
-  char * allocated =  align_to(raw, PAGE_SIZE); 
+  char * raw = (char*) malloc (pagesize*2);
+  char * allocated =  align_to(raw, pagesize); 
   printf ("Trying Allocated %p\n",allocated);  
-  make_rwx(allocated, PAGE_SIZE) ;
+  make_rwx(allocated, pagesize) ;
   allocated [0] = 0xC3; // flat mode near return 
   function_call *f_malloc = (function_call *)&allocated[0];
   (*f_malloc) ();   
