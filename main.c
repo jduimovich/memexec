@@ -1,9 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h> 
-
+#include <unistd.h>
+#include <signal.h>
+#include <stdio.h> 
+#include <stdlib.h>
+#include <errno.h>
 #include <sys/mman.h>
 
 void make_rwx(char *m, int len) { 
+  // int pagesize = sysconf(_SC_PAGE_SIZE);
+  // if (pagesize == -1){
+  //     perror("sysconf");
+  // }
+  // char *buffer = memalign(pagesize, 4 * pagesize);
+
   int r = mprotect((void *)m,   len,    PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX %d\n", r);
 }
@@ -18,6 +26,11 @@ the code wiil abort with Trace/breakpoint trap
 */
 
 int main(int argc, char *argv[]) { 
+
+  int pagesize = sysconf(_SC_PAGE_SIZE);
+
+  printf("_SC_PAGE_SIZE %d\n", pagesize); 
+
   printf("Exec code in static memory\n"); 
   executable_code [0] = 0xC3; // flat mode near return 
   make_rwx(executable_code, sizeof (executable_code)) ;
