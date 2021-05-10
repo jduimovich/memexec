@@ -2,11 +2,11 @@
 #include <signal.h>
 #include <stdio.h> 
 #include <stdlib.h>
-#include <errno.h>
+#include <errno.h> 
 #include <sys/mman.h>
 
 int make_rwx(char *m, int len) {  
-  int r = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
+  int result = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX %d\n", r);
   return result;
 }
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   int pagesize = sysconf(_SC_PAGE_SIZE);
   printf("_SC_PAGE_SIZE %d\n", pagesize); 
   if (sizeof (void*) != 8) {  
-      printf("ERROR must be 64 bit %d\n", sizeof (void*)); 
+      printf("ERROR must be 64 bit %ld\n", sizeof (void*)); 
       exit (-1);
   } 
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
        Do not change the pointer, just adjust for alignment 
     */
     char * allocated = (char*) malloc (pagesize*2);
-    long aligned = ((long)(allocated) & ~(pagesize-1));  
+    long aligned = (((long)allocated) & ~(pagesize-1));  
     char * protect =  (char*) aligned;  
     // add the rounded down to length
     make_rwx(protect, (allocated - protect)+pagesize*2) ;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     printf("Exec code in memalign memory\n"); 
     /* memalign and mprotect  
     */ 
-    char * allocated =  (char*) memalign(pagesize, pagesize); 
+    char * allocated =  (char*) aligned_alloc(pagesize, pagesize); 
     printf ("memalign Allocated %p\n",allocated);  
     make_rwx(allocated, pagesize) ;
     allocated [0] = 0xC3; // flat mode near return 
