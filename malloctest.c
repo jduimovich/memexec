@@ -13,7 +13,7 @@ void make_rwx(char *m, int len) {
 #define PAGE_SIZE 4096 
 char *align_to (char *m, int align) { 
   printf ("Align %p to %x\n", m, align); 
-  long aligned = (long)((m + align-1) & ~(align-1));  
+  long aligned = ((long)(m + align-1) & ~(align-1));  
   printf ("Align %p to %lx\n", m, aligned);
   return (char *) aligned;
 }
