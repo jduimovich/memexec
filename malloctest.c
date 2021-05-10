@@ -10,12 +10,15 @@ int make_rwx(char *m, int len) {
   printf ("RWX from %p for %d bytes, result = %d\n", m, len, result);
   return result;
 }
- 
-char *align_to (char *m, int align) { 
-  printf ("Align %p to %x\n", m, align); 
-  long aligned = ((long)(m + align-1) & ~(align-1));  
-  printf ("Align %p to %lx\n", m, aligned);
+
+/* chop off the low bits to align */
+char *align_down_to (char *m, int align) { 
+  long aligned = (((long)m) & ~(align-1));    
   return (char *) aligned;
+}
+/* add align-1 and then round down to get to next alignment boundry*/
+char *align_up_to (char *m, int align) {  
+  return align_down_to(m+align-1, align);  
 }
  
 typedef void(function_call)();
@@ -42,7 +45,7 @@ int main(int argc, char *argv[]) {
        over allocate the memory to allow for alignment (need an extra pagesize-1 bytes)
     */
     char * raw = (char*) malloc (ALLOCATE_SIZE+(pagesize-1));
-    char * allocated =  align_to(raw, pagesize); 
+    char * allocated =  align_up_to(raw, pagesize); 
     printf ("Allocated %p, round up to alignment %p\n",raw, allocated);  
     make_rwx(allocated, ALLOCATE_SIZE-(allocated - raw)) ;
     allocated [0] = 0xC3; // flat mode near return 
