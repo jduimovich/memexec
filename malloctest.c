@@ -14,11 +14,11 @@ void make_rwx(char *m, int len) {
 char *align_to (char *m, int align) { 
   printf ("Align %p to %x\n", m, align);
   char *a = m + (align-1); 
-  long aa =( (long)a;
-  aa &= (align-1);
+  long aa = (long)a;
+  aa &= ~(align-1);
   a=(char*)aa;
-  printf ("Align %p to %p\n", m, aa);
-  return aa;
+  printf ("Align %p to %p\n", m, a);
+  return a;
 }
  
 typedef void(function_call)();
