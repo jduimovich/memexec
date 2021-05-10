@@ -5,9 +5,10 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-void make_rwx(char *m, int len) {  
+int make_rwx(char *m, int len) {  
   int r = mprotect((void *)m, len, PROT_READ |  PROT_WRITE| PROT_EXEC);
   printf ("RWX %d\n", r);
+  return result;
 }
  
 char *align_to (char *m, int align) { 
@@ -36,12 +37,28 @@ int main(int argc, char *argv[]) {
 
   { 
     printf("Exec code in malloc memory\n"); 
-    /* aligns the memory returned via mprotect skips front of allocated to align  
+    /* aligns the memory returned via mprotect skips front of allocated to align 
+       over allocate the memory to allow for alignment (need an extra pagesize-1 bytes)
     */
     char * raw = (char*) malloc (pagesize*2);
     char * allocated =  align_to(raw, pagesize); 
     printf ("Trying Allocated %p\n",allocated);  
     make_rwx(allocated, pagesize) ;
+    allocated [0] = 0xC3; // flat mode near return 
+    function_call *f_malloc = (function_call *)&allocated[0];
+    (*f_malloc) ();   
+  }
+
+  { 
+    printf("Exec code in malloc memory\n"); 
+    /* Hack version, align the pages around the allocated pointer
+       Do not change the pointer, just adjust for alignment 
+    */
+    char * allocated = (char*) malloc (pagesize*2);
+    long aligned = ((long)(allocated) & ~(pagesize-1));  
+    char * protect =  (char*) aligned;  
+    // add the rounded down to length
+    make_rwx(protect, (allocated - protect)+pagesize*2) ;
     allocated [0] = 0xC3; // flat mode near return 
     function_call *f_malloc = (function_call *)&allocated[0];
     (*f_malloc) ();   
@@ -58,8 +75,6 @@ int main(int argc, char *argv[]) {
     function_call *f_malloc = (function_call *)&allocated[0];
     (*f_malloc) ();   
   }
-
  
-
   return 0; 
 }
