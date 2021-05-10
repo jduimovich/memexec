@@ -1,3 +1,6 @@
+
+cc -m64 mmapalloc.c -o  demo_mmapalloc_no_exec
+
 echo binary execstack flags are 
 execstack -q demo_* 
 
