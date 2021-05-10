@@ -3,6 +3,8 @@ cc -m64 mmapalloc.c -o  demo_mmapalloc_no_exec
 
 echo binary execstack flags are 
 execstack -q demo_* 
+echo linux kernel is 
+uname -r 
 
 echo ' ' 
 echo Running demo_mmapalloc_no_exec - no execstack use mprotect to enable execute
