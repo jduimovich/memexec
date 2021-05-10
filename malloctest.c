@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     */
     char * raw = (char*) malloc (ALLOCATE_SIZE+(pagesize-1));
     char * allocated =  align_to(raw, pagesize); 
-    printf ("Trying Allocated %p\n",allocated);  
+    printf ("Allocated %p, round up to alignment %p\n",raw, allocated);  
     make_rwx(allocated, ALLOCATE_SIZE-(allocated - raw)) ;
     allocated [0] = 0xC3; // flat mode near return 
     function_call *f_malloc = (function_call *)&allocated[0];
@@ -55,11 +55,14 @@ int main(int argc, char *argv[]) {
     /* Hack version, align the pages around the allocated pointer
        Do not change the pointer, just force adjust for mprotect
        USE the ORIGINAL pointer for execution 
+       This hack may be problematic as it covers memory that is not part of your allocation
+       There will be a memory page there but technically not to mess with. 
     */
     char * allocated = (char*) malloc (ALLOCATE_SIZE);
     long aligned = (((long)allocated) & ~(pagesize-1));  
     char * protect =  (char*) aligned;  
-    // add the rounded down to allocate size
+    printf ("Allocated %p, round down to alignment %p\n", allocated, protect);  
+    // add the rounded down to allocate size to cover full range
     make_rwx(protect, (allocated - protect)+ALLOCATE_SIZE) ;
     allocated [0] = 0xC3; // flat mode near return 
     function_call *f_malloc = (function_call *)&allocated[0];
@@ -67,7 +70,7 @@ int main(int argc, char *argv[]) {
   }
 
   {
-    printf("Exec code in memalign memory\n"); 
+    printf("Exec code in aligned_alloc memory protect exact allocate size\n"); 
     /* aligned_alloc and mprotect  */ 
     char * allocated =  (char*) aligned_alloc(pagesize, ALLOCATE_SIZE); 
     printf ("aligned_alloc Allocated %p\n",allocated);  
