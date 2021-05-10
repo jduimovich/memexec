@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     char * raw = (char*) malloc (ALLOCATE_SIZE+(pagesize-1));
     char * allocated =  align_up_to(raw, pagesize); 
     printf ("Allocated %p, round up to alignment %p\n",raw, allocated);  
-    make_rwx(allocated, ALLOCATE_SIZE-(allocated - raw)) ;
+    make_rwx(allocated, ALLOCATE_SIZE+(pagesize-1)-(allocated - raw)) ;
     allocated [0] = 0xC3; // flat mode near return 
     function_call *f_malloc = (function_call *)&allocated[0];
     (*f_malloc) ();   
