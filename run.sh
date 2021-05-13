@@ -21,19 +21,16 @@ execstack -q demo_*
 echo linux kernel is 
 uname -r 
 
-
 echo Running demo_w_exec - compiled with -z execstack
-#Expect this to SUCCEED 
+#Expect this to SUCCEED on older kernels
 ./demo_w_exec
 print_result $?
 
-
-echo ' ' 
-echo Running demo_no_exec - compiled without -z execstack 
-#Expect this to CRASH 
-./demo_no_exec
-print_result $?
-
+#echo ' ' 
+#echo Running demo_no_exec - compiled without -z execstack 
+#Expect this to CRASH so skip it
+#./demo_no_exec
+#print_result $? 
 
 echo ' ' 
 echo Running demo_personality_w_exec - compiled with -z execstack 
@@ -44,6 +41,9 @@ echo ' '
 print_result $?
 echo ' ' 
 ./demo_personality_w_exec stack
+print_result $?
+echo ' ' 
+./demo_personality_no_exec brk
 print_result $?
 
 echo ' ' 
