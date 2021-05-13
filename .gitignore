@@ -3,3 +3,4 @@ demo_no_exec
 demo_personality_w_exec
 demo_personality_no_exec
 demo_malloc_no_exec
+demo_mmapalloc_no_exec

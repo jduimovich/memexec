@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   } 
 
   { 
-    printf("Exec code in malloc memory\n"); 
+    printf("Exec code in malloc memory, mprotect interal to allocation\n"); 
     /* aligns the memory returned via mprotect skips front of allocated to align 
        over allocate the memory to allow for alignment (need an extra pagesize-1 bytes)
     */
@@ -83,14 +83,5 @@ int main(int argc, char *argv[]) {
     (*f_malloc) ();   
   }
 
-   {
-    printf("Exec code in aligned_alloc memory protect exact allocate size\n");  
-    char * allocated =  (char*) aligned_alloc(pagesize, ALLOCATE_SIZE); 
-    printf ("aligned_alloc Allocated %p\n",allocated);  
-    make_rwx(allocated, ALLOCATE_SIZE) ;
-    allocated [0] = 0xC3; // flat mode near return 
-    function_call *f_malloc = (function_call *)&allocated[0];
-    (*f_malloc) ();   
-  }  
   return 0; 
 }
