@@ -1,3 +1,4 @@
+#!/bin/bash
 
 cc -m64 -z execstack main.c -o  demo_w_exec
 cc -m64 main.c -o  demo_no_exec
@@ -32,6 +33,7 @@ print_result $?
 #./demo_no_exec
 #print_result $? 
 
+echo starting ...
 echo ' ' 
 echo Running demo_personality_w_exec - compiled with -z execstack 
 ./demo_personality_w_exec malloc
